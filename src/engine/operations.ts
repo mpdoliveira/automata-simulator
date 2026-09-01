@@ -40,6 +40,7 @@ export function addState(
 
     if (!label) {
         label = "q" + currId
+        // Possibly add a default label function to allow config preference
     }
 
     newStates.set(
@@ -55,4 +56,56 @@ export function addState(
         states: newStates,
         nextId: currId + 1
     }
+}
+
+export function rmState (
+    automaton : Automaton,
+    rmId : number
+): Automaton {
+
+    if (!automaton.states.has(rmId)) {
+        return automaton;
+    }
+
+    const newStates = automaton.states;
+
+    newStates.delete(rmId);
+
+    for (const [id, state] of newStates) {
+        const newTransitions = new Map(state.transitions);
+
+        for (const [symbol, targets] of newTransitions) {
+            const newTargets = new Set(targets)
+            
+            if (targets.has(rmId)) {
+                newTargets.delete(rmId);
+
+                newTransitions.set(
+                    symbol,
+                    newTargets
+                );
+            }
+        }
+
+        newStates.set(
+            id,
+            {
+                ...state,
+                transitions: newTransitions
+            }
+        )
+    }
+
+    const newInitialStates = new Set(automaton.initialStates)
+    newInitialStates.delete(rmId);
+
+    const newFinalStates = new Set(automaton.finalStates)
+    newFinalStates.delete(rmId)
+
+    return {
+        ...automaton,
+        states: newStates,
+        initialStates: newInitialStates,
+        finalStates: newFinalStates
+    };
 }
