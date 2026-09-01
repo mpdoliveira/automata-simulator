@@ -29,3 +29,30 @@ export function initAutomaton (
         finalStates: finalStates
     }
 }
+
+export function addState(
+    automaton : Automaton = initAutomaton(),
+    label?: string
+) {
+    const newStates = new Map(automaton.states);
+
+    const currId = automaton.nextId;
+
+    if (!label) {
+        label = "q" + currId
+    }
+
+    newStates.set(
+        currId, 
+        {
+            label: label,
+            transitions: new Map<Symbol, Set<StateId>>()
+        }
+    )
+
+    return {
+        ...automaton,
+        states: newStates,
+        nextId: currId + 1
+    }
+}
