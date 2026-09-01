@@ -23,7 +23,7 @@ export type Step = {
 
 export type Automaton = {
     name : string;
-    alphabet : Set<Symbol> | null ;
+    alphabet?: Set<Symbol>;
     states : Map<StateId, State>;
     nextId : number;
     initialStates : Set<StateId>;
