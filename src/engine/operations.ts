@@ -5,6 +5,7 @@ import type {
     Symbol
 } from "../types.ts";
 
+
 export function initAutomaton (
     name : string = "Default",
     alphanet?: Set<Symbol>,
@@ -29,6 +30,7 @@ export function initAutomaton (
         finalStates: finalStates
     }
 }
+
 
 export function addState(
     automaton : Automaton = initAutomaton(),
@@ -57,6 +59,7 @@ export function addState(
         nextId: currId + 1
     }
 }
+
 
 export function rmState (
     automaton : Automaton,
@@ -108,4 +111,55 @@ export function rmState (
         initialStates: newInitialStates,
         finalStates: newFinalStates
     };
+}
+
+
+export function addTransition(
+    automaton : Automaton,
+    sourceId : StateId,
+    symbol : Symbol,
+    targetId : StateId
+): Automaton {
+    if (automaton.alphabet && !automaton.alphabet.has(symbol)) {
+        return automaton;
+    }
+
+    if (!automaton.states.has(sourceId) || !automaton.states.has(targetId)) {
+        return automaton;
+    }
+
+    const newStates = new Map(
+        automaton.states
+    );
+
+    const newState = {
+        ...newStates.get(sourceId)!
+    };
+
+    const newTransitions = new Map(
+        newState.transitions
+    );
+    
+    const newTargets = new Set<StateId>(
+        newTransitions.get(symbol) ?? []
+    );
+
+    newTargets.add(targetId);
+
+    newTransitions.set(
+        symbol,
+        newTargets
+    );
+
+    newState.transitions = newTransitions;
+
+    newStates.set(
+        sourceId,
+        newState
+    );
+
+    return {
+        ...automaton,
+        states: newStates
+    }
 }
