@@ -49,7 +49,7 @@ export function addState(
         currId, 
         {
             label: label,
-            transitions: new Map<Symbol, Set<StateId>>()
+            transitions: new Map<Symbol, Set<StateId>>() // maybe add new Set?
         }
     )
 
@@ -128,23 +128,66 @@ export function addTransition(
         return automaton;
     }
 
-    const newStates = new Map(
-        automaton.states
-    );
+    const newStates = new Map(automaton.states);
 
     const newState = {
         ...newStates.get(sourceId)!
     };
 
-    const newTransitions = new Map(
-        newState.transitions
-    );
+    const newTransitions = new Map(newState.transitions);
     
     const newTargets = new Set<StateId>(
         newTransitions.get(symbol) ?? []
     );
 
     newTargets.add(targetId);
+
+    newTransitions.set(
+        symbol,
+        newTargets
+    );
+
+    newState.transitions = newTransitions;
+
+    newStates.set(
+        sourceId,
+        newState
+    );
+
+    return {
+        ...automaton,
+        states: newStates
+    }
+}
+
+export function rmTransition(
+    automaton : Automaton,
+    sourceId : StateId,
+    symbol : Symbol,
+    targetId : StateId,
+): Automaton {
+    if (automaton.alphabet && !automaton.alphabet.has(symbol)){
+        return automaton;
+    }
+
+    if (!automaton.states.has(sourceId) || !automaton.states.has(targetId)) {
+        return automaton;
+    }
+
+    const newStates = new Map(automaton.states);
+    const newState = {
+        ...newStates.get(sourceId)!
+    }
+
+    const newTransitions = new Map(newState.transitions);
+
+    if (!newTransitions.has(symbol)) {
+        return automaton;
+    }
+
+    const newTargets = new Set(newTransitions.get(symbol));
+
+    newTargets.delete(targetId);
 
     newTransitions.set(
         symbol,
