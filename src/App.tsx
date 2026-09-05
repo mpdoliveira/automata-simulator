@@ -33,10 +33,12 @@ function List (
 function stateNames (
     automaton : Automaton
 ) : String[] {
+
     const names = [];
     for (const state of automaton.states.values()) {
         names.push(state.label);
     }
+
     return names;
 }
 
