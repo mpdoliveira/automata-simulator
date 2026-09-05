@@ -2,8 +2,10 @@ import {
     initAutomaton,
     addState
  } from "./engine/operations"
+import type { Automaton } from "./types"
 
-function Button(
+
+function Button (
     props : {
         name : string
     }
@@ -13,12 +15,41 @@ function Button(
     )
 }
 
-export default function App() {
-    const automaton = initAutomaton()
+function List (
+    props : {
+        items : String[]
+    }
+) {
+    return (
+        <>
+            <ul>
+                {props.items.map((item) => <li>{item}</li>)}
+            </ul>
+        </>
+    )
+}
+
+
+function stateNames (
+    automaton : Automaton
+) : String[] {
+    const names = [];
+    for (const state of automaton.states.values()) {
+        names.push(state.label);
+    }
+    return names;
+}
+
+
+export default function App () {
+    let automaton = initAutomaton()
+
+    automaton = addState(automaton, "test")
 
     return (
         <>
-            <Button name="+ State" />
+            <Button name="+ State"/>
+            <List items={stateNames(automaton)}/>
         </>
     )
 }
