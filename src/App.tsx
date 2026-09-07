@@ -5,9 +5,10 @@ import type { Automaton } from "./types";
 
 function Button(
   props: { 
-    name : string
+    name : string,
+    onClick: () => void
   }) {
-  return <button>{props.name}</button>;
+  return <button onClick={props.onClick}>{props.name}</button>;
 }
 
 function List(props: { items: String[] }) {
@@ -34,9 +35,13 @@ function stateNames(automaton: Automaton): String[] {
 export default function App() {
   const [automaton, setAutomaton] = useState(initAutomaton());
 
+  function handleAddState() {
+    setAutomaton(addState(automaton, "test"));
+  }
+
   return (
     <>
-      <Button name="+ State"/>
+      <Button name="+ State" onClick={handleAddState}/>
       <List items={stateNames(automaton)} />
     </>
   );
