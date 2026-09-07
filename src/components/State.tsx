@@ -1,21 +1,18 @@
 type Props = {
-    label?: string,
-    id : number,
-    isFinal?: boolean,
-    xCenter : string | number,
-    onClick: () => void,
-}
+  label?: string;
+  id: number;
+  isFinal?: boolean;
+  xCenter: string | number;
+  onClick: () => void;
+};
 
-export default function State(
-    {
-        label,
-        id,
-        isFinal = false,
-        xCenter = "50",
-        onClick
-    } : Props
-)
-{
+export default function State({
+  label,
+  id,
+  isFinal = false,
+  xCenter = "50",
+  onClick,
+}: Props) {
   let strokeWidth = "3";
 
   if (isFinal) {
