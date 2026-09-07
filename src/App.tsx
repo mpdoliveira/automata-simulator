@@ -1,27 +1,9 @@
 import { useState } from "react";
 
-import { initAutomaton, addState } from "./engine/operations";
-import type { Automaton } from "./types";
+import { initAutomaton, addState, rmState } from "./engine/operations";
+import type { Automaton, StateId } from "./types";
 
-function Button(
-  props: { 
-    name : string,
-    onClick: () => void
-  }) {
-  return <button onClick={props.onClick}>{props.name}</button>;
-}
-
-function List(props: { items: String[] }) {
-  return (
-    <>
-      <ul>
-        {props.items.map((item) => (
-          <li>{item}</li>
-        ))}
-      </ul>
-    </>
-  );
-}
+import Button from "./components/Button.tsx";
 
 function stateNames(automaton: Automaton): String[] {
   const names = [];
@@ -35,14 +17,27 @@ function stateNames(automaton: Automaton): String[] {
 export default function App() {
   const [automaton, setAutomaton] = useState(initAutomaton());
 
+  const [clicked, setClicked] = useState(new Set());
+
+  function handleItemClick(id: StateId) {
+    let temp = clicked;
+
+    if (clicked.has(id)) {
+      temp.delete(id);
+      setClicked(temp);
+    } else {
+      temp.add(id);
+      setClicked(temp);
+    }
+  }
+
   function handleAddState() {
-    setAutomaton(addState(automaton, "test"));
+    setAutomaton(addState(automaton));
   }
 
   return (
     <>
-      <Button name="+ State" onClick={handleAddState}/>
-      <List items={stateNames(automaton)} />
+      <Button name="+ State" onClick={handleAddState} />
     </>
   );
 }
