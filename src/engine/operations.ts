@@ -31,10 +31,11 @@ export function initAutomaton (
     }
 }
 
-
 export function addState(
     automaton : Automaton = initAutomaton(),
-    label?: string
+    label?: string,
+    x?: number,
+    y?: number
 ) {
     const newStates = new Map(automaton.states);
 
@@ -44,11 +45,19 @@ export function addState(
         label = "q" + currId
         // Possibly add a default label function to allow config preference
     }
+    if (!x) {
+        x = 0;
+    }
+    if (!y) {
+        y = 0;
+    }
 
     newStates.set(
         currId, 
         {
             label: label,
+            x: x,
+            y: y,
             transitions: new Map<Symbol, Set<StateId>>() // maybe add new Set?
         }
     )
