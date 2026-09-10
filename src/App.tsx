@@ -4,19 +4,12 @@ import { initAutomaton, addState, rmState } from "./engine/operations";
 import type { Automaton, StateId } from "./types";
 
 import Button from "./components/Button.tsx";
-import State from "./components/State.tsx";
-
-function stateNames(automaton: Automaton): string[] {
-  const names = [];
-  for (const state of automaton.states.values()) {
-    names.push(state.label);
-  }
-
-  return names;
-}
+import Canvas from "./components/canvas.tsx";
 
 export default function App() {
   const [automaton, setAutomaton] = useState(initAutomaton());
+
+  const [selectedStates, setSelected] = useState(new Set<StateId>)
 
   function handleAddState() {
     setAutomaton(addState(automaton));
@@ -25,16 +18,7 @@ export default function App() {
   return (
     <>
       <Button name="+ State" onClick={handleAddState} />
-      <svg width="1000" height="1000">
-        {stateNames(automaton).map((state, index) => (
-          <State
-            label={state}
-            id={index}
-            xCenter={String(100 * index)}
-            onClick={() => console.log("HEY")}
-          />
-        ))}
-      </svg>
+      <Canvas automaton={automaton} selectedStates={selectedStates}/>
     </>
   );
 }
