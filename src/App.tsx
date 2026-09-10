@@ -15,10 +15,22 @@ export default function App() {
     setAutomaton(addState(automaton));
   }
 
+  function handleSelectState(id : StateId) {
+    let newSelectedStates = new Set(selectedStates);
+    if (selectedStates.has(id)) {
+      newSelectedStates.delete(id);
+      setSelected(newSelectedStates);
+    }
+    else {
+      newSelectedStates.add(id) 
+        setSelected(newSelectedStates);
+    }
+  }
+
   return (
     <>
       <Button name="+ State" onClick={handleAddState} />
-      <Canvas automaton={automaton} selectedStates={selectedStates}/>
+      <Canvas automaton={automaton} selectedStates={selectedStates} onSelect={handleSelectState}/>
     </>
   );
 }

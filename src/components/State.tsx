@@ -1,22 +1,32 @@
+import type { StateId } from "../types"
+
 type Props = {
   label?: string;
   id: number;
   isFinal?: boolean;
+  isSelected: boolean;
   xCenter: string | number;
-  onClick: () => void;
+  onSelect: (id : StateId) => void;
 };
 
 export default function State({
   label,
   id,
   isFinal = false,
+  isSelected,
   xCenter = "50",
-  onClick,
+  onSelect: onSelect,
 }: Props) {
   let strokeWidth = "3";
 
+  let fill = "white";
+
   if (isFinal) {
     strokeWidth = "6";
+  }
+
+  if (isSelected) {
+    fill = "blue"
   }
 
   return (
@@ -24,10 +34,10 @@ export default function State({
       r="40"
       cx={xCenter}
       cy="50"
-      fill="white"
+      fill={fill}
       stroke="black"
       stroke-width={strokeWidth}
-      onClick={onClick}
+      onClick={() => onSelect(id)}
     />
   );
 }
