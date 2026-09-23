@@ -9,6 +9,7 @@ type Props = {
   selectedStates: Set<StateId>;
   onSelect: (id: StateId) => void;
   onDelete: () => void;
+  onMoveState: (id : StateId, x: number, y: number) => void;
 };
 
 function _() {}
@@ -18,6 +19,7 @@ export default function Canvas({
   selectedStates,
   onSelect,
   onDelete,
+  onMoveState
 }: Props) {
   function handleKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
     if (e.key === "Delete") {
@@ -34,8 +36,10 @@ export default function Canvas({
             id={stateId}
             isFinal={automaton.finalStates.has(stateId)}
             isSelected={selectedStates.has(stateId)}
-            xCenter={stateId * 100 + 50}
+            x={state.x}
+            y={state.y}
             onSelect={onSelect}
+            onMoveState={onMoveState}
           />
         ))}
       </svg>

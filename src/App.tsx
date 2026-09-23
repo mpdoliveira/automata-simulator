@@ -5,6 +5,7 @@ import {
   addState,
   rmState,
   rmTransition,
+  mvState,
 } from "./engine/operations";
 import type { Automaton, State, StateId, Transition } from "./types";
 
@@ -52,6 +53,10 @@ export default function App() {
     setSelectedTransitions(new Set<Transition>());
   }
 
+  function handleMoveState(id: StateId, x: number, y: number) {
+    setAutomaton(mvState(automaton, id, x, y));
+  }
+
   return (
     <>
       <Button name="+ State" onClick={handleAddState} />
@@ -60,6 +65,7 @@ export default function App() {
         selectedStates={selectedStates}
         onSelect={handleSelectState}
         onDelete={handleDelete}
+        onMoveState={handleMoveState}
       />
     </>
   );

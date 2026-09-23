@@ -69,6 +69,25 @@ export function addState(
     }
 }
 
+export function mvState(
+    automaton : Automaton, 
+    mvId : StateId,
+    x : number,
+    y : number) {
+
+        const newStates = new Map(automaton.states);
+        const newState = {
+            ...newStates.get(mvId)!,
+            x: x,
+            y: y
+        };
+
+        newStates.set(mvId, newState);  
+        return {
+            ...automaton,
+            states: newStates
+        }
+}
 
 export function rmState (
     automaton : Automaton,
@@ -79,7 +98,7 @@ export function rmState (
         return automaton;
     }
 
-    const newStates = automaton.states;
+    const newStates = new Map(automaton.states);
 
     newStates.delete(rmId);
 
