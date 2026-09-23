@@ -13,6 +13,7 @@ type Props = {
   size?: number;
 };
 
+
 export default function State({
   label,
   id,
@@ -24,10 +25,6 @@ export default function State({
   y = 50,
   size = 30,
 }: Props) {
-  let strokeWidth = "3";
-  if (isFinal) {
-    strokeWidth = "6";
-  }
 
   let fill = "white";
   if (isSelected) {
@@ -66,28 +63,37 @@ export default function State({
   function handleEndHover() {
     setHovered(false);
   }
+
   return (
-    <g
-      onPointerEnter={handleHover}
-      onPointerLeave={handleEndHover}>
-      <circle
-        r={outerSize}
-        fill="transparent"
-        cx={x}
-        cy={y}
-      />
-      <circle
-        r={size}
-        cx={x}
-        cy={y}
-        fill={fill}
-        stroke="black"
-        strokeWidth={strokeWidth}
+    <g onPointerEnter={handleHover} onPointerLeave={handleEndHover}>
+      <circle r={outerSize} fill="transparent" cx={x} cy={y} />
+      <g
         onPointerDown={handleBeginMove}
         onPointerMove={handleMove}
         onPointerUp={handleEndMove}
-      />
-       <text x={x} y={y}>{label}</text>
+      >
+        <circle
+          r={size}
+          cx={x}
+          cy={y}
+          fill={fill}
+          stroke="black"
+          strokeWidth="1"
+        />
+        {isFinal && (
+          <circle
+            r={size - 10}
+            cx={x}
+            cy={y}
+            fill={fill}
+            stroke="black"
+            strokeWidth="1"
+          />
+        )}
+      </g>
+      <text x={x} y={y}>
+        {label}
+      </text>
       {isHovered && !moveRef.current && (
         <>
           <circle r="4" cx={x} cy={y + outerSize} />
