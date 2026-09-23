@@ -87,6 +87,7 @@ export default function State({
         onPointerMove={handleMove}
         onPointerUp={handleEndMove}
       />
+       <text x={x} y={y}>{label}</text>
       {isHovered && !moveRef.current && (
         <>
           <circle r="4" cx={x} cy={y + outerSize} />
