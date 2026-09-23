@@ -2,7 +2,8 @@ import type {
     Automaton,
     State,
     StateId, 
-    Symbol
+    Symbol,
+    Transition
 } from "../types.ts";
 
 
@@ -233,4 +234,20 @@ export function rmTransition(
         ...automaton,
         states: newStates
     }
+}
+
+export function getTransitions(automaton : Automaton): Transition[] {
+    const transitions:Transition[] = []
+    for (const [sourceId, state] of automaton.states) {
+        for (const [symbol, targets] of state.transitions) {
+            for (const targetId of targets) {
+                transitions.push({
+                    source : sourceId,
+                    symbol : symbol,
+                    target : targetId
+                })
+            }
+        }
+    }
+    return transitions;
 }
