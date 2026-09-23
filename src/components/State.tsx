@@ -1,26 +1,28 @@
 import type { StateId } from "../types";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 type Props = {
   label?: string;
   id: number;
   isFinal?: boolean;
-  isSelected: boolean;
-  x: number;
-  y: number;
+  isSelected?: boolean;
+  x?: number;
+  y?: number;
   onSelect: (id: StateId) => void;
   onMoveState: (id: StateId, x: number, y: number) => void;
+  size?: number;
 };
 
 export default function State({
   label,
   id,
-  isSelected,
+  onSelect,
+  onMoveState,
+  isSelected = false,
   isFinal = false,
   x = 50,
   y = 50,
-  onSelect,
-  onMoveState,
+  size = 30,
 }: Props) {
   let strokeWidth = "3";
   if (isFinal) {
@@ -31,6 +33,8 @@ export default function State({
   if (isSelected) {
     fill = "blue";
   }
+
+  const outerSize = size + 10;
 
   const xRef = useRef(0);
   const yRef = useRef(0);
@@ -54,17 +58,43 @@ export default function State({
     e.currentTarget.releasePointerCapture(e.pointerId);
   }
 
+  const [isHovered, setHovered] = useState(false);
+  function handleHover() {
+    setHovered(true);
+  }
+
+  function handleEndHover() {
+    setHovered(false);
+  }
   return (
-    <circle
-      r="40"
-      cx={x}
-      cy={y}
-      fill={fill}
-      stroke="black"
-      strokeWidth={strokeWidth}
-      onPointerDown={handleBeginMove}
-      onPointerMove={handleMove}
-      onPointerUp={handleEndMove}
-    />
+    <g
+      onPointerEnter={handleHover}
+      onPointerLeave={handleEndHover}>
+      <circle
+        r={outerSize}
+        fill="transparent"
+        cx={x}
+        cy={y}
+      />
+      <circle
+        r={size}
+        cx={x}
+        cy={y}
+        fill={fill}
+        stroke="black"
+        strokeWidth={strokeWidth}
+        onPointerDown={handleBeginMove}
+        onPointerMove={handleMove}
+        onPointerUp={handleEndMove}
+      />
+      {isHovered && !moveRef.current && (
+        <>
+          <circle r="4" cx={x} cy={y + outerSize} />
+          <circle r="4" cx={x + outerSize} cy={y} />
+          <circle r="4" cx={x} cy={y - outerSize} />
+          <circle r="4" cx={x - outerSize} cy={y} />
+        </>
+      )}
+    </g>
   );
 }
