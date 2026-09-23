@@ -7,7 +7,7 @@ import {
   rmTransition,
   mvState,
 } from "./engine/operations";
-import type { Automaton, State, StateId, Transition } from "./types";
+import type { StateId, Transition } from "./types";
 
 import Button from "./components/Button.tsx";
 import Canvas from "./components/canvas.tsx";

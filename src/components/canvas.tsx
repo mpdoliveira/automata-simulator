@@ -12,8 +12,6 @@ type Props = {
   onMoveState: (id : StateId, x: number, y: number) => void;
 };
 
-function _() {}
-
 export default function Canvas({
   automaton,
   selectedStates,
