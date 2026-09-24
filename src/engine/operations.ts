@@ -57,8 +57,7 @@ export function addState(
         currId, 
         {
             label: label,
-            x: x,
-            y: y,
+            position: {x, y},
             transitions: new Map<Symbol, Set<StateId>>() // maybe add new Set?
         }
     )
@@ -250,4 +249,12 @@ export function getTransitions(automaton : Automaton): Transition[] {
         }
     }
     return transitions;
+}
+
+export function getStatePosition(
+    automaton: Automaton,
+    stateId: StateId
+): {x: number, y: number} {
+    
+    return automaton.states.get(stateId)!.position;
 }
