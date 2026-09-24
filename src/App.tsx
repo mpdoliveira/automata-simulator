@@ -6,8 +6,9 @@ import {
   rmState,
   rmTransition,
   mvState,
+  addTransition,
 } from "./engine/operations";
-import type { Position, StateId, Transition } from "./types";
+import type { Position, StateId, Transition, Symbol} from "./types";
 
 import Button from "./components/Button.tsx";
 import Canvas from "./components/canvas.tsx";
@@ -57,9 +58,14 @@ export default function App() {
     setAutomaton(mvState(automaton, id, position));
   }
 
+  function handleAddTransition() {
+    setAutomaton(addTransition(automaton, 0, "a", 1))
+  }
+
   return (
     <>
       <Button name="+ State" onClick={handleAddState} />
+      <Button name="+ Transition" onClick={handleAddTransition} />
       <Canvas
         automaton={automaton}
         selectedStates={selectedStates}
