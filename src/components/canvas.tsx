@@ -33,15 +33,7 @@ export default function Canvas({
 
   const sourceIdRef = useRef<StateId | null>(null);
 
-  function handleTransition(stateId : StateId) {
-    if (sourceIdRef.current) {
-      onAddTransition(sourceIdRef.current, stateId);
-      sourceIdRef.current = null;
-    }
-    else {
-      sourceIdRef.current = stateId;
-    }
-  }
+  
   
   return (
     <div tabIndex={0} onKeyDown={handleKeyDown}>
