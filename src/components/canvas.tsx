@@ -1,6 +1,6 @@
-import {} from "react";
+import { useRef } from "react";
 
-import type { Automaton, Position, StateId } from "../types.tsx";
+import type { Automaton, Position, StateId, Symbol} from "../types.tsx";
 
 import State from "./State.tsx";
 import Transition from "./Transition.tsx";
@@ -12,6 +12,7 @@ type Props = {
   onSelect: (id: StateId) => void;
   onDelete: () => void;
   onMoveState: (id: StateId, position: Position) => void;
+  onAddTransition: (sourceId: StateId, targetId: StateId) => void;
 };
 
 
@@ -21,11 +22,24 @@ export default function Canvas({
   onSelect,
   onDelete,
   onMoveState,
+  onAddTransition
 }: Props) {
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
     if (e.key === "Delete") {
       onDelete();
+    }
+  }
+
+  const sourceIdRef = useRef<StateId | null>(null);
+
+  function handleTransition(stateId : StateId) {
+    if (sourceIdRef.current) {
+      onAddTransition(sourceIdRef.current, stateId);
+      sourceIdRef.current = null;
+    }
+    else {
+      sourceIdRef.current = stateId;
     }
   }
   
@@ -40,17 +54,16 @@ export default function Canvas({
           />
         ))}
         {getStates(automaton).map(([stateId, state]) => (
-          <>
-            <State
-              label={state.label}
-              id={stateId}
-              isFinal={automaton.finalStates.has(stateId)}
-              isSelected={selectedStates.has(stateId)}
-              position={getPosition(automaton, stateId)}
-              onSelect={onSelect}
-              onMoveState={onMoveState}
-            />
-          </>
+          <State
+            label={state.label}
+            id={stateId}
+            isFinal={automaton.finalStates.has(stateId)}
+            isSelected={selectedStates.has(stateId)}
+            position={getPosition(automaton, stateId)}
+            onSelect={onSelect}
+            onMoveState={onMoveState}
+            onTransition={handleTransition}
+          />
         ))}
       </svg>
     </div>

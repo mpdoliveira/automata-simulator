@@ -1,14 +1,14 @@
 import type { Position } from "../types";
 
 type Props = {
-  sourcePosition: Position;
-  symbol: string;
-  targetPosition: Position;
+  sourcePosition : Position;
+  symbol?: string;
+  targetPosition : Position;
 };
 
 export default function Transition({
   sourcePosition,
-  symbol,
+  symbol = "",
   targetPosition,
 }: Props) {
   return (

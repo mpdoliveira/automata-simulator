@@ -1,5 +1,6 @@
 import type { Position, StateId } from "../types";
 import { useRef, useState } from "react";
+import Transition from "./Transition";
 
 type Props = {
   label?: string;
@@ -8,10 +9,10 @@ type Props = {
   isSelected?: boolean;
   position: Position;
   onSelect: (id: StateId) => void;
-  onMoveState: (id: StateId, position : Position) => void;
+  onMoveState: (id: StateId, position: Position) => void;
+  onTransition: (id: StateId) => void;
   size?: number;
 };
-
 
 export default function State({
   label,
@@ -19,11 +20,11 @@ export default function State({
   position,
   onSelect,
   onMoveState,
+  onTransition,
   isSelected = false,
   isFinal = false,
   size = 30,
 }: Props) {
-
   let fill = "white";
   if (isSelected) {
     fill = "blue";
@@ -34,7 +35,7 @@ export default function State({
   const xRef = useRef(0);
   const yRef = useRef(0);
   const moveRef = useRef(false);
-  function handleBeginMove(e: React.PointerEvent<SVGCircleElement>) {
+  function handleMoveStart(e: React.PointerEvent<SVGCircleElement>) {
     moveRef.current = true;
     xRef.current = position.x - e.clientX;
     yRef.current = position.y - e.clientY;
@@ -45,14 +46,14 @@ export default function State({
   function handleMove(e: React.PointerEvent<SVGCircleElement>) {
     if (moveRef.current) {
       const newPosition = {
-        x : e.clientX + xRef.current,
-        y : e.clientY + yRef.current
-      }
+        x: e.clientX + xRef.current,
+        y: e.clientY + yRef.current,
+      };
       onMoveState(id, newPosition);
     }
   }
 
-  function handleEndMove(e: React.PointerEvent<SVGCircleElement>) {
+  function handleMoveEnd(e: React.PointerEvent<SVGCircleElement>) {
     moveRef.current = false;
     e.currentTarget.releasePointerCapture(e.pointerId);
   }
@@ -68,11 +69,16 @@ export default function State({
 
   return (
     <g onPointerEnter={handleHover} onPointerLeave={handleEndHover}>
-      <circle r={outerSize} fill="transparent" cx={position.x} cy={position.y} />
+      <circle
+        r={outerSize}
+        fill="transparent"
+        cx={position.x}
+        cy={position.y}
+      />
       <g
-        onPointerDown={handleBeginMove}
+        onPointerDown={handleMoveStart}
         onPointerMove={handleMove}
-        onPointerUp={handleEndMove}
+        onPointerUp={handleMoveEnd}
       >
         <circle
           r={size}
@@ -98,7 +104,7 @@ export default function State({
       </text>
       {isHovered && !moveRef.current && (
         <>
-          <circle r="4" cx={position.x} cy={position.y + outerSize} />
+          <circle r="4" cx={position.x} cy={position.y + outerSize} onPointerUp={() => onTransition(id)} onPointerDown={() => onTransition(id)}/>
           <circle r="4" cx={position.x + outerSize} cy={position.y} />
           <circle r="4" cx={position.x} cy={position.y - outerSize} />
           <circle r="4" cx={position.x - outerSize} cy={position.y} />

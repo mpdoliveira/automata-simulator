@@ -58,20 +58,20 @@ export default function App() {
     setAutomaton(mvState(automaton, id, position));
   }
 
-  function handleAddTransition() {
-    setAutomaton(addTransition(automaton, 0, "a", 1))
+  function handleAddTransition(sourceId : StateId, targetId : StateId) {
+    setAutomaton(addTransition(automaton, sourceId, "a", targetId));
   }
 
   return (
     <>
       <Button name="+ State" onClick={handleAddState} />
-      <Button name="+ Transition" onClick={handleAddTransition} />
       <Canvas
         automaton={automaton}
         selectedStates={selectedStates}
         onSelect={handleSelectState}
         onDelete={handleDelete}
         onMoveState={handleMoveState}
+        onAddTransition={handleAddTransition}
       />
     </>
   );
