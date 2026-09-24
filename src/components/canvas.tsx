@@ -4,7 +4,7 @@ import type { Automaton, Position, StateId } from "../types.tsx";
 
 import State from "./State.tsx";
 import Transition from "./Transition.tsx";
-import { getPosition, getTransitions } from "../engine/operations.ts";
+import { getPosition, getTransitions, getStates } from "../engine/operations.ts";
 
 type Props = {
   automaton: Automaton;
@@ -14,6 +14,7 @@ type Props = {
   onMoveState: (id: StateId, position: Position) => void;
 };
 
+
 export default function Canvas({
   automaton,
   selectedStates,
@@ -21,24 +22,25 @@ export default function Canvas({
   onDelete,
   onMoveState,
 }: Props) {
+
   function handleKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
     if (e.key === "Delete") {
       onDelete();
     }
   }
-
+  
   return (
     <div tabIndex={0} onKeyDown={handleKeyDown}>
       <svg width="100%" height="70%">
-        {Array.from(automaton.states).map(([stateId, state]) => (
+        {getTransitions(automaton).map((transition) => (
+          <Transition
+            sourcePosition={getPosition(automaton, transition.source)}
+            symbol={transition.symbol}
+            targetPosition={getPosition(automaton, transition.target)}
+          />
+        ))}
+        {getStates(automaton).map(([stateId, state]) => (
           <>
-            {getTransitions(automaton).map((transition) => (
-              <Transition
-                sourcePosition={getPosition(automaton, transition.source)}
-                symbol={transition.symbol}
-                targetPosition={getPosition(automaton, transition.target)}
-              />
-            ))}
             <State
               label={state.label}
               id={stateId}
