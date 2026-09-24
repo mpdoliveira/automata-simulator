@@ -1,15 +1,16 @@
 import {} from "react";
 
-import type { Automaton, StateId } from "../types.tsx";
+import type { Automaton, Position, StateId } from "../types.tsx";
 
 import State from "./State.tsx";
+import { getPosition } from "../engine/operations.ts";
 
 type Props = {
   automaton: Automaton;
   selectedStates: Set<StateId>;
   onSelect: (id: StateId) => void;
   onDelete: () => void;
-  onMoveState: (id : StateId, x: number, y: number) => void;
+  onMoveState: (id : StateId, position : Position) => void;
 };
 
 export default function Canvas({
@@ -34,8 +35,7 @@ export default function Canvas({
             id={stateId}
             isFinal={automaton.finalStates.has(stateId)}
             isSelected={selectedStates.has(stateId)}
-            x={state.x}
-            y={state.y}
+            position={getPosition(automaton, stateId)}
             onSelect={onSelect}
             onMoveState={onMoveState}
           />

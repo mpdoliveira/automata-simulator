@@ -1,4 +1,4 @@
-import type { StateId } from "../types";
+import type { Position, StateId } from "../types";
 import { useRef, useState } from "react";
 
 type Props = {
@@ -6,10 +6,9 @@ type Props = {
   id: number;
   isFinal?: boolean;
   isSelected?: boolean;
-  x?: number;
-  y?: number;
+  position: Position;
   onSelect: (id: StateId) => void;
-  onMoveState: (id: StateId, x: number, y: number) => void;
+  onMoveState: (id: StateId, position : Position) => void;
   size?: number;
 };
 
@@ -17,12 +16,11 @@ type Props = {
 export default function State({
   label,
   id,
+  position,
   onSelect,
   onMoveState,
   isSelected = false,
   isFinal = false,
-  x = 50,
-  y = 50,
   size = 30,
 }: Props) {
 
@@ -38,15 +36,19 @@ export default function State({
   const moveRef = useRef(false);
   function handleBeginMove(e: React.PointerEvent<SVGCircleElement>) {
     moveRef.current = true;
-    xRef.current = x - e.clientX;
-    yRef.current = y - e.clientY;
+    xRef.current = position.x - e.clientX;
+    yRef.current = position.y - e.clientY;
     e.currentTarget.setPointerCapture(e.pointerId);
     onSelect(id);
   }
 
   function handleMove(e: React.PointerEvent<SVGCircleElement>) {
     if (moveRef.current) {
-      onMoveState(id, e.clientX + xRef.current, e.clientY + yRef.current);
+      const newPosition = {
+        x : e.clientX + xRef.current,
+        y : e.clientY + yRef.current
+      }
+      onMoveState(id, newPosition);
     }
   }
 
@@ -66,7 +68,7 @@ export default function State({
 
   return (
     <g onPointerEnter={handleHover} onPointerLeave={handleEndHover}>
-      <circle r={outerSize} fill="transparent" cx={x} cy={y} />
+      <circle r={outerSize} fill="transparent" cx={position.x} cy={position.y} />
       <g
         onPointerDown={handleBeginMove}
         onPointerMove={handleMove}
@@ -74,8 +76,8 @@ export default function State({
       >
         <circle
           r={size}
-          cx={x}
-          cy={y}
+          cx={position.x}
+          cy={position.y}
           fill={fill}
           stroke="black"
           strokeWidth="1"
@@ -83,23 +85,23 @@ export default function State({
         {isFinal && (
           <circle
             r={size - 10}
-            cx={x}
-            cy={y}
+            cx={position.x}
+            cy={position.y}
             fill={fill}
             stroke="black"
             strokeWidth="1"
           />
         )}
       </g>
-      <text x={x} y={y}>
+      <text x={position.x} y={position.y}>
         {label}
       </text>
       {isHovered && !moveRef.current && (
         <>
-          <circle r="4" cx={x} cy={y + outerSize} />
-          <circle r="4" cx={x + outerSize} cy={y} />
-          <circle r="4" cx={x} cy={y - outerSize} />
-          <circle r="4" cx={x - outerSize} cy={y} />
+          <circle r="4" cx={position.x} cy={position.y + outerSize} />
+          <circle r="4" cx={position.x + outerSize} cy={position.y} />
+          <circle r="4" cx={position.x} cy={position.y - outerSize} />
+          <circle r="4" cx={position.x - outerSize} cy={position.y} />
         </>
       )}
     </g>

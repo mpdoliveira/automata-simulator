@@ -3,7 +3,8 @@ import type {
     State,
     StateId, 
     Symbol,
-    Transition
+    Transition,
+    Position
 } from "../types.ts";
 
 
@@ -11,6 +12,7 @@ export function initAutomaton (
     name : string = "Default",
     alphanet?: Set<Symbol>,
     states : Map<StateId, State> = new Map<StateId, State>(),
+    statePositions : Map<StateId, Position> = new Map<StateId, Position>(),
     initialStates : Set<StateId> = new Set<StateId>(),
     finalStates : Set<StateId> = new Set<StateId>()
 ) : Automaton {
@@ -26,6 +28,7 @@ export function initAutomaton (
         name: name,
         alphabet: alphanet,
         states: states,
+        statePositions: statePositions,
         nextId: nextId,
         initialStates: initialStates,
         finalStates: finalStates
@@ -34,59 +37,39 @@ export function initAutomaton (
 
 export function addState(
     automaton : Automaton = initAutomaton(),
+    position?: Position,
     label?: string,
-    x?: number,
-    y?: number
 ) {
-    const newStates = new Map(automaton.states);
-
     const currId = automaton.nextId;
+
+    const newStates = new Map(automaton.states);
 
     if (!label) {
         label = "q" + currId
         // Possibly add a default label function to allow config preference
     }
-    if (!x) {
-        x = 0;
-    }
-    if (!y) {
-        y = 0;
+
+    if (!position) {
+        position = {x: 100, y: 100}
     }
 
     newStates.set(
         currId, 
         {
             label: label,
-            position: {x, y},
             transitions: new Map<Symbol, Set<StateId>>() // maybe add new Set?
         }
     )
 
+    const newStatePositions = new Map(automaton.statePositions);
+    newStatePositions.set(currId, position)
+
     return {
         ...automaton,
         states: newStates,
+        statePositions: newStatePositions,
         nextId: currId + 1
     }
-}
-
-export function mvState(
-    automaton : Automaton, 
-    mvId : StateId,
-    x : number,
-    y : number) {
-
-        const newStates = new Map(automaton.states);
-        const newState = {
-            ...newStates.get(mvId)!,
-            x: x,
-            y: y
-        };
-
-        newStates.set(mvId, newState);  
-        return {
-            ...automaton,
-            states: newStates
-        }
 }
 
 export function rmState (
@@ -125,6 +108,7 @@ export function rmState (
                 transitions: newTransitions
             }
         )
+
     }
 
     const newInitialStates = new Set(automaton.initialStates)
@@ -133,12 +117,31 @@ export function rmState (
     const newFinalStates = new Set(automaton.finalStates)
     newFinalStates.delete(rmId)
 
+    const newStatePositions = new Map(automaton.statePositions);
+    newStatePositions.delete(rmId);
+
     return {
         ...automaton,
         states: newStates,
+        statePositions: newStatePositions,
         initialStates: newInitialStates,
         finalStates: newFinalStates
     };
+}
+
+
+export function mvState(
+    automaton : Automaton, 
+    mvId : StateId,
+    position : Position
+) {
+    const newStatePositions = new Map(automaton.statePositions);
+    newStatePositions.set(mvId, position)
+
+    return {
+        ...automaton,
+        statePositions : newStatePositions
+    }
 }
 
 
@@ -251,10 +254,7 @@ export function getTransitions(automaton : Automaton): Transition[] {
     return transitions;
 }
 
-export function getStatePosition(
-    automaton: Automaton,
-    stateId: StateId
-): {x: number, y: number} {
-    
-    return automaton.states.get(stateId)!.position;
+
+export function getPosition(automaton : Automaton, stateId : StateId): Position {
+    return automaton.statePositions.get(stateId)!
 }

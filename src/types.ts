@@ -1,14 +1,15 @@
 
 // types for readability
 export type Symbol = string;
-
 export type StateId = number;
+export type Position = {
+    x : number;
+    y : number;
+}
 
 // types for eficient operation
 export type State = {
     label: string;
-    x: number;
-    y: number;
     transitions : Map<Symbol, Set<StateId>>;
 }
 
@@ -16,6 +17,7 @@ export type Automaton = {
     name : string;
     alphabet?: Set<Symbol>;
     states : Map<StateId, State>;
+    statePositions: Map<StateId, Position>;
     nextId : number;
     initialStates : Set<StateId>;
     finalStates : Set<StateId>;

@@ -7,7 +7,7 @@ import {
   rmTransition,
   mvState,
 } from "./engine/operations";
-import type { StateId, Transition } from "./types";
+import type { Position, StateId, Transition } from "./types";
 
 import Button from "./components/Button.tsx";
 import Canvas from "./components/canvas.tsx";
@@ -53,8 +53,8 @@ export default function App() {
     setSelectedTransitions(new Set<Transition>());
   }
 
-  function handleMoveState(id: StateId, x: number, y: number) {
-    setAutomaton(mvState(automaton, id, x, y));
+  function handleMoveState(id: StateId, position : Position) {
+    setAutomaton(mvState(automaton, id, position));
   }
 
   return (
