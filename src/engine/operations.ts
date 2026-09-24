@@ -258,3 +258,7 @@ export function getTransitions(automaton : Automaton): Transition[] {
 export function getPosition(automaton : Automaton, stateId : StateId): Position {
     return automaton.statePositions.get(stateId)!
 }
+
+export function getStates(automaton : Automaton): [StateId, State][] {
+    return Array.from(automaton.states);
+}
