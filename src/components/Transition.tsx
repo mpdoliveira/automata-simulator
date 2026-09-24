@@ -1,27 +1,22 @@
+import type { Position } from "../types";
+
 type Props = {
-  sourcePosition: {x: number, y: number};
+  sourcePosition: Position;
   symbol: string;
-  targetPosition: {x: number, y: number};
+  targetPosition: Position;
 };
 
 export default function Transition({
   sourcePosition,
   symbol,
-  targetPosition
+  targetPosition,
 }: Props) {
   return (
     <>
       <path
-        d={"M".concat(
-          sourcePosition.x.toString(),
-          ",",
-          sourcePosition.y.toString(),
-          "L",
-          targetPosition.x.toString(),
-          ",",
-          targetPosition.y.toString(),
-        )}
+        d={`M${sourcePosition.x},${sourcePosition.y} L${targetPosition.x},${targetPosition.y}`}
         stroke="black"
+        strokeWidth="2"
       />
       <marker id="arrow" refX="40" refY="40" />
     </>
