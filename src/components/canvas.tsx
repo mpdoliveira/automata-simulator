@@ -1,20 +1,25 @@
 import { useRef } from "react";
 
-import type { Automaton, Position, StateId, Symbol} from "../types.tsx";
+import type { Automaton, Position, StateId, Symbol } from "../types.tsx";
 
 import State from "./State.tsx";
 import Transition from "./Transition.tsx";
-import { getPosition, getTransitions, getStates } from "../engine/operations.ts";
+import {
+  getPosition,
+  getTransitions,
+  getStates,
+  getLastState,
+} from "../engine/operations.ts";
 
 type Props = {
   automaton: Automaton;
   selectedStates: Set<StateId>;
-  onSelect: (id: StateId) => void;
-  onDelete: () => void;
-  onMoveState: (id: StateId, position: Position) => void;
-  onAddTransition: (sourceId: StateId, targetId: StateId) => void;
+  onSelect: Function;
+  onDelete: Function;
+  onMoveState: Function;
+  onAddTransition: Function;
+  onQuickAdd: Function;
 };
-
 
 export default function Canvas({
   automaton,
@@ -22,9 +27,9 @@ export default function Canvas({
   onSelect,
   onDelete,
   onMoveState,
-  onAddTransition
+  onAddTransition,
+  onQuickAdd,
 }: Props) {
-
   function handleKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
     if (e.key === "Delete") {
       onDelete();
@@ -35,18 +40,15 @@ export default function Canvas({
 
   function handleTransitionStart(stateId: StateId) {
     sourceIdRef.current = stateId;
-    console.log("one");
   }
 
   function handleTransitionEnd(targetId: StateId) {
-    if (sourceIdRef.current) {
+    if (sourceIdRef.current != null) {
       onAddTransition(sourceIdRef.current, targetId);
-      console.log("two");
       sourceIdRef.current = null;
     }
   }
 
-  
   return (
     <div tabIndex={0} onKeyDown={handleKeyDown}>
       <svg width="100%" height="70%">
@@ -68,6 +70,7 @@ export default function Canvas({
             onMoveState={onMoveState}
             onTransitionStart={handleTransitionStart}
             onTransitionEnd={handleTransitionEnd}
+            onQuickAdd={onQuickAdd}
           />
         ))}
       </svg>

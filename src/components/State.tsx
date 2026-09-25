@@ -12,6 +12,7 @@ type Props = {
   onMoveState: Function;
   onTransitionStart: Function;
   onTransitionEnd: Function;
+  onQuickAdd: Function;
   size?: number;
 };
 
@@ -23,6 +24,7 @@ export default function State({
   onMoveState,
   onTransitionStart,
   onTransitionEnd,
+  onQuickAdd,
   isSelected = false,
   isFinal = false,
   size = 30,
@@ -112,6 +114,7 @@ export default function State({
             cy={position.y + outerSize}
             onPointerDown={() => onTransitionStart(id)}
             onPointerUp={() => onTransitionEnd(id)}
+            onClick={() => onQuickAdd(id)}
           />
           <circle
             r="4"
@@ -119,6 +122,7 @@ export default function State({
             cy={position.y}
             onPointerDown={() => onTransitionStart(id)}
             onPointerUp={() => onTransitionEnd(id)}
+            onClick={() => onQuickAdd(id)}
           />
           <circle
             r="4"
@@ -126,6 +130,7 @@ export default function State({
             cy={position.y - outerSize}
             onPointerDown={() => onTransitionStart(id)}
             onPointerUp={() => onTransitionEnd(id)}
+            onClick={() => onQuickAdd(id)}
           />
           <circle
             r="4"
@@ -133,6 +138,7 @@ export default function State({
             cy={position.y}
             onPointerDown={() => onTransitionStart(id)}
             onPointerUp={() => onTransitionEnd(id)}
+            onClick={() => onQuickAdd(id)}
           />
         </>
       )}

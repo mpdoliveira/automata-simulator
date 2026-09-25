@@ -7,8 +7,9 @@ import {
   rmTransition,
   mvState,
   addTransition,
+  getLastState,
 } from "./engine/operations";
-import type { Position, StateId, Transition, Symbol} from "./types";
+import type { Position, StateId, Transition, Symbol } from "./types";
 
 import Button from "./components/Button.tsx";
 import Canvas from "./components/canvas.tsx";
@@ -54,12 +55,21 @@ export default function App() {
     setSelectedTransitions(new Set<Transition>());
   }
 
-  function handleMoveState(id: StateId, position : Position) {
+  function handleMoveState(id: StateId, position: Position) {
     setAutomaton(mvState(automaton, id, position));
   }
 
-  function handleAddTransition(sourceId : StateId, targetId : StateId) {
+  function handleAddTransition(sourceId: StateId, targetId: StateId) {
     setAutomaton(addTransition(automaton, sourceId, "a", targetId));
+  }
+
+  function handleQuickAdd(sourceId: StateId) {
+    {
+      setAutomaton(addState(automaton));
+      setAutomaton((previous) =>
+        addTransition(previous, sourceId, "a", getLastState(previous)),
+      );
+    }
   }
 
   return (
@@ -72,6 +82,7 @@ export default function App() {
         onDelete={handleDelete}
         onMoveState={handleMoveState}
         onAddTransition={handleAddTransition}
+        onQuickAdd={handleQuickAdd}
       />
     </>
   );
