@@ -33,15 +33,19 @@ export default function Canvas({
 
   const sourceIdRef = useRef<StateId | null>(null);
 
-  function handleTransition(stateId : StateId) {
+  function handleTransitionStart(stateId: StateId) {
+    sourceIdRef.current = stateId;
+    console.log("one");
+  }
+
+  function handleTransitionEnd(targetId: StateId) {
     if (sourceIdRef.current) {
-      onAddTransition(sourceIdRef.current, stateId);
+      onAddTransition(sourceIdRef.current, targetId);
+      console.log("two");
       sourceIdRef.current = null;
     }
-    else {
-      sourceIdRef.current = stateId;
-    }
   }
+
   
   return (
     <div tabIndex={0} onKeyDown={handleKeyDown}>
@@ -62,7 +66,8 @@ export default function Canvas({
             position={getPosition(automaton, stateId)}
             onSelect={onSelect}
             onMoveState={onMoveState}
-            onTransition={handleTransition}
+            onTransitionStart={handleTransitionStart}
+            onTransitionEnd={handleTransitionEnd}
           />
         ))}
       </svg>

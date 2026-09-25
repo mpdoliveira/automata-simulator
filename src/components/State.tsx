@@ -8,9 +8,10 @@ type Props = {
   isFinal?: boolean;
   isSelected?: boolean;
   position: Position;
-  onSelect: (id: StateId) => void;
-  onMoveState: (id: StateId, position: Position) => void;
-  onTransition: (id: StateId) => void;
+  onSelect: Function;
+  onMoveState: Function;
+  onTransitionStart: Function;
+  onTransitionEnd: Function;
   size?: number;
 };
 
@@ -20,7 +21,8 @@ export default function State({
   position,
   onSelect,
   onMoveState,
-  onTransition,
+  onTransitionStart,
+  onTransitionEnd,
   isSelected = false,
   isFinal = false,
   size = 30,
@@ -104,10 +106,34 @@ export default function State({
       </text>
       {isHovered && !moveRef.current && (
         <>
-          <circle r="4" cx={position.x} cy={position.y + outerSize} onPointerUp={() => onTransition(id)} onPointerDown={() => onTransition(id)}/>
-          <circle r="4" cx={position.x + outerSize} cy={position.y} />
-          <circle r="4" cx={position.x} cy={position.y - outerSize} />
-          <circle r="4" cx={position.x - outerSize} cy={position.y} />
+          <circle
+            r="4"
+            cx={position.x}
+            cy={position.y + outerSize}
+            onPointerDown={() => onTransitionStart(id)}
+            onPointerUp={() => onTransitionEnd(id)}
+          />
+          <circle
+            r="4"
+            cx={position.x + outerSize}
+            cy={position.y}
+            onPointerDown={() => onTransitionStart(id)}
+            onPointerUp={() => onTransitionEnd(id)}
+          />
+          <circle
+            r="4"
+            cx={position.x}
+            cy={position.y - outerSize}
+            onPointerDown={() => onTransitionStart(id)}
+            onPointerUp={() => onTransitionEnd(id)}
+          />
+          <circle
+            r="4"
+            cx={position.x - outerSize}
+            cy={position.y}
+            onPointerDown={() => onTransitionStart(id)}
+            onPointerUp={() => onTransitionEnd(id)}
+          />
         </>
       )}
     </g>
