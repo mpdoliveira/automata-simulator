@@ -8,6 +8,7 @@ import {
   mvState,
   addTransition,
   getLastState,
+  makeFinal,
 } from "./engine/operations";
 import type { Position, StateId, Transition, Symbol } from "./types";
 
@@ -72,6 +73,10 @@ export default function App() {
     }
   }
 
+  function handleMakeFinal(stateId: StateId) {
+    setAutomaton(makeFinal(automaton, stateId));
+  }
+
   return (
     <>
       <Button name="+ State" onClick={handleAddState} />
@@ -83,6 +88,7 @@ export default function App() {
         onMoveState={handleMoveState}
         onAddTransition={handleAddTransition}
         onQuickAdd={handleQuickAdd}
+        onMakeFinal={handleMakeFinal}
       />
     </>
   );

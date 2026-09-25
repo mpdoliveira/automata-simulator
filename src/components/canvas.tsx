@@ -7,8 +7,7 @@ import Transition from "./Transition.tsx";
 import {
   getPosition,
   getTransitions,
-  getStates,
-  getLastState,
+  getStates
 } from "../engine/operations.ts";
 
 type Props = {
@@ -19,6 +18,7 @@ type Props = {
   onMoveState: Function;
   onAddTransition: Function;
   onQuickAdd: Function;
+  onMakeFinal: Function;
 };
 
 export default function Canvas({
@@ -29,6 +29,7 @@ export default function Canvas({
   onMoveState,
   onAddTransition,
   onQuickAdd,
+  onMakeFinal,
 }: Props) {
   function handleKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
     if (e.key === "Delete") {
@@ -71,6 +72,7 @@ export default function Canvas({
             onTransitionStart={handleTransitionStart}
             onTransitionEnd={handleTransitionEnd}
             onQuickAdd={onQuickAdd}
+            onMakeFinal={onMakeFinal}
           />
         ))}
       </svg>

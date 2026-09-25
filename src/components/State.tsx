@@ -13,6 +13,7 @@ type Props = {
   onTransitionStart: Function;
   onTransitionEnd: Function;
   onQuickAdd: Function;
+  onMakeFinal: Function;
   size?: number;
 };
 
@@ -25,6 +26,7 @@ export default function State({
   onTransitionStart,
   onTransitionEnd,
   onQuickAdd,
+  onMakeFinal,
   isSelected = false,
   isFinal = false,
   size = 30,
@@ -83,6 +85,7 @@ export default function State({
         onPointerDown={handleMoveStart}
         onPointerMove={handleMove}
         onPointerUp={handleMoveEnd}
+        onDoubleClick={() => onMakeFinal(id)}
       >
         <circle
           r={size}
@@ -94,7 +97,7 @@ export default function State({
         />
         {isFinal && (
           <circle
-            r={size - 10}
+            r={size - 3}
             cx={position.x}
             cy={position.y}
             fill={fill}
