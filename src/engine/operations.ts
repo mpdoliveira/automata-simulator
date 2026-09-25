@@ -238,6 +238,12 @@ export function rmTransition(
     }
 }
 
+
+export function getStates(automaton : Automaton): [StateId, State][] {
+    return Array.from(automaton.states);
+}
+
+
 export function getTransitions(automaton : Automaton): Transition[] {
     const transitions:Transition[] = []
     for (const [sourceId, state] of automaton.states) {
@@ -259,6 +265,6 @@ export function getPosition(automaton : Automaton, stateId : StateId): Position 
     return automaton.statePositions.get(stateId)!
 }
 
-export function getStates(automaton : Automaton): [StateId, State][] {
-    return Array.from(automaton.states);
+export function getLastState(automaton : Automaton) {
+    return automaton.nextId - 1;
 }
