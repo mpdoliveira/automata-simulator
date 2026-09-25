@@ -35,6 +35,21 @@ export function initAutomaton (
     }
 }
 
+export function makeFinal(automaton: Automaton, stateId: StateId) : Automaton {
+    const newFinalStates = new Set(automaton.finalStates);
+    if (newFinalStates.has(stateId)) {
+        newFinalStates.delete(stateId)
+    }
+    else {
+        newFinalStates.add(stateId);
+    }
+    
+    return {
+        ...automaton,
+        finalStates: newFinalStates
+    }
+}
+
 export function addState(
     automaton : Automaton = initAutomaton(),
     position?: Position,
