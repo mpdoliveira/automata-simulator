@@ -14,6 +14,11 @@ export default function Transition({
   const deltaX = targetPosition.x - sourcePosition.x;
   const deltaY = targetPosition.y - sourcePosition.y;
 
+  const midPosition = {
+    x: (sourcePosition.x + targetPosition.x) / 2,
+    y: (sourcePosition.y + targetPosition.y) / 2,
+  }
+
   const distance = Math.sqrt(
     Math.pow(deltaX, 2) 
     + Math.pow(deltaY, 2),
@@ -52,6 +57,7 @@ export default function Transition({
         strokeWidth="2"
         markerEnd="url(#arrow)"
       />
+      <text x={midPosition.x} y={midPosition.y}>{symbol}</text>
     </>
   );
 }
