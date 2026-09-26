@@ -11,18 +11,42 @@ export default function Transition({
   symbol = "",
   targetPosition,
 }: Props) {
+  if (
+    sourcePosition.x === targetPosition.x &&
+    sourcePosition.y === targetPosition.y
+  ) {
+    return (
+      <>
+        <marker
+          id="arrow"
+          viewBox="0 0 10 10"
+          refX="10"
+          refY="5"
+          markerWidth="6"
+          markerHeight="6"
+          orient="auto-start-reverse"
+        >
+          <path d="M 0 0 L 10 5 L 0 10 z" />
+        </marker>
+        <path
+          d={`M${sourcePosition.x -80},${sourcePosition.y} L${targetPosition.x - 30},${targetPosition.y}`}
+          stroke="black"
+          strokeWidth="2"
+          markerEnd="url(#arrow)"
+        />
+      </>
+    )
+  }
+
   const deltaX = targetPosition.x - sourcePosition.x;
   const deltaY = targetPosition.y - sourcePosition.y;
 
   const midPosition = {
     x: (sourcePosition.x + targetPosition.x) / 2,
     y: (sourcePosition.y + targetPosition.y) / 2,
-  }
+  };
 
-  const distance = Math.sqrt(
-    Math.pow(deltaX, 2) 
-    + Math.pow(deltaY, 2),
-  );
+  const distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
 
   const unitX = deltaX / distance;
   const unitY = deltaY / distance;
@@ -33,12 +57,12 @@ export default function Transition({
   const sourceEdgePosition = {
     x: sourcePosition.x + offsetX,
     y: sourcePosition.y + offsetY,
-  }
+  };
 
   const targetEdgePosition = {
     x: targetPosition.x - offsetX,
     y: targetPosition.y - offsetY,
-  }
+  };
 
   return (
     <>
@@ -50,14 +74,18 @@ export default function Transition({
         markerWidth="6"
         markerHeight="6"
         orient="auto-start-reverse"
-      ><path d="M 0 0 L 10 5 L 0 10 z" /></marker>
+      >
+        <path d="M 0 0 L 10 5 L 0 10 z" />
+      </marker>
       <path
         d={`M${sourceEdgePosition.x},${sourceEdgePosition.y} L${targetEdgePosition.x},${targetEdgePosition.y}`}
         stroke="black"
         strokeWidth="2"
         markerEnd="url(#arrow)"
       />
-      <text x={midPosition.x} y={midPosition.y}>{symbol}</text>
+      <text x={midPosition.x} y={midPosition.y}>
+        {symbol}
+      </text>
     </>
   );
 }
