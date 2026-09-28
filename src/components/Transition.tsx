@@ -1,9 +1,9 @@
 import type { Position } from "../types";
 
 type Props = {
-  sourcePosition: Position;
+  sourcePosition?: Position;
   symbol?: string;
-  targetPosition: Position;
+  targetPosition : Position;
 };
 
 export default function Transition({
@@ -11,10 +11,7 @@ export default function Transition({
   symbol = "",
   targetPosition,
 }: Props) {
-  if (
-    sourcePosition.x === targetPosition.x &&
-    sourcePosition.y === targetPosition.y
-  ) {
+  if (!sourcePosition) {
     return (
       <>
         <marker
@@ -29,7 +26,52 @@ export default function Transition({
           <path d="M 0 0 L 10 5 L 0 10 z" />
         </marker>
         <path
-          d={`M${sourcePosition.x -80},${sourcePosition.y} L${targetPosition.x - 30},${targetPosition.y}`}
+          d={`M${targetPosition.x -80},${targetPosition.y} L${targetPosition.x - 30},${targetPosition.y}`}
+          stroke="black"
+          strokeWidth="2"
+          markerEnd="url(#arrow)"
+        />
+      </>
+    )
+  }
+
+  if (
+    sourcePosition.x === targetPosition.x &&
+    sourcePosition.y === targetPosition.y
+  ) {
+
+    const offset = 30 / Math.sqrt(2);
+    
+    const loopSourcePosition = {
+      x: sourcePosition.x - offset,
+      y: sourcePosition.y - offset
+    }
+
+    const loopTargetPosition = {
+      x: targetPosition.x + offset,
+      y: targetPosition.y - offset
+    }
+
+    return (
+      <>
+        <marker
+          id="arrow"
+          viewBox="0 0 10 10"
+          refX="10"
+          refY="5"
+          markerWidth="6"
+          markerHeight="6"
+          orient="auto-start-reverse"
+        >
+          <path d="M 0 0 L 10 5 L 0 10 z" />
+        </marker>
+        <path
+          d={`
+            M ${loopSourcePosition.x} ${loopSourcePosition.y}
+            A 30 30 0 1 1
+              ${loopTargetPosition.x} ${loopTargetPosition.y}
+          `}
+          fill="none"
           stroke="black"
           strokeWidth="2"
           markerEnd="url(#arrow)"
