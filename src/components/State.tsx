@@ -41,6 +41,7 @@ export default function State({
   const xRef = useRef(0);
   const yRef = useRef(0);
   const moveRef = useRef(false);
+
   function handleMoveStart(e: React.PointerEvent<SVGCircleElement>) {
     moveRef.current = true;
     xRef.current = position.x - e.clientX;
@@ -71,6 +72,23 @@ export default function State({
 
   function handleEndHover() {
     setHovered(false);
+  }
+
+  const transitionAnchorRef = useRef(-1);
+  function handleTransitionStart(anchorId: number) {
+    transitionAnchorRef.current = anchorId;
+    onTransitionStart(id);
+  }
+
+  function handleTransitionEnd(anchorId: number) {
+    if (transitionAnchorRef.current === anchorId) {
+      console.log("quick")
+      onQuickAdd(id);
+    }
+    else {
+      console.log("trans")
+      onTransitionEnd(id);
+    }
   }
 
   return (
@@ -114,34 +132,30 @@ export default function State({
           <circle
             r="4"
             cx={position.x}
-            cy={position.y + outerSize}
-            onPointerDown={() => onTransitionStart(id)}
-            onPointerUp={() => onTransitionEnd(id)}
-            onClick={() => onQuickAdd(id)}
+            cy={position.y - outerSize}
+            onPointerDown={() => handleTransitionStart(0)}
+            onPointerUp={() => handleTransitionEnd(0)}
           />
           <circle
             r="4"
             cx={position.x + outerSize}
             cy={position.y}
-            onPointerDown={() => onTransitionStart(id)}
-            onPointerUp={() => onTransitionEnd(id)}
-            onClick={() => onQuickAdd(id)}
+            onPointerDown={() => handleTransitionStart(1)}
+            onPointerUp={() => handleTransitionEnd(1)}
           />
           <circle
             r="4"
             cx={position.x}
-            cy={position.y - outerSize}
-            onPointerDown={() => onTransitionStart(id)}
-            onPointerUp={() => onTransitionEnd(id)}
-            onClick={() => onQuickAdd(id)}
+            cy={position.y + outerSize}
+            onPointerDown={() => handleTransitionStart(2)}
+            onPointerUp={() => handleTransitionEnd(2)}
           />
           <circle
             r="4"
             cx={position.x - outerSize}
             cy={position.y}
-            onPointerDown={() => onTransitionStart(id)}
-            onPointerUp={() => onTransitionEnd(id)}
-            onClick={() => onQuickAdd(id)}
+            onPointerDown={() => handleTransitionStart(3)}
+            onPointerUp={() => handleTransitionEnd(3)}
           />
         </>
       )}

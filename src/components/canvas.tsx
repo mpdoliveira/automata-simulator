@@ -39,15 +39,12 @@ export default function Canvas({
 
   const sourceIdRef = useRef<StateId | null>(null);
 
-  function handleTransitionStart(stateId: StateId) {
-    sourceIdRef.current = stateId;
+  function handleTransitionStart(sourceId: StateId) {
+    sourceIdRef.current = sourceId;
   }
 
   function handleTransitionEnd(targetId: StateId) {
-    if (sourceIdRef.current != null) {
-      onAddTransition(sourceIdRef.current, targetId);
-      sourceIdRef.current = null;
-    }
+    onAddTransition(sourceIdRef.current, targetId);
   }
 
   return (
