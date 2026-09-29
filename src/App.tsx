@@ -9,6 +9,7 @@ import {
   addTransition,
   getLastState,
   makeFinal,
+  makeInitial,
 } from "./engine/operations";
 import type { Position, StateId, Transition, Symbol } from "./types";
 
@@ -77,9 +78,14 @@ export default function App() {
     setAutomaton(makeFinal(automaton, stateId));
   }
 
+  function handleMakeInitial() {
+    setAutomaton(makeInitial(automaton, 0));
+  }
+
   return (
     <>
       <Button name="+ State" onClick={handleAddState} />
+      <Button name="+ Initial" onClick={handleMakeInitial} />
       <Canvas
         automaton={automaton}
         selectedStates={selectedStates}
