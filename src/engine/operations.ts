@@ -43,10 +43,26 @@ export function makeFinal(automaton: Automaton, stateId: StateId) : Automaton {
     else {
         newFinalStates.add(stateId);
     }
-    
+
     return {
         ...automaton,
         finalStates: newFinalStates
+    }
+}
+
+export function makeInitial(automaton: Automaton, stateId: StateId) : Automaton {
+    const newInitialStates = new Set(automaton.initialStates);
+
+    if (newInitialStates.has(stateId)) {
+        newInitialStates.delete(stateId);
+    }
+    else {
+        newInitialStates.add(stateId);
+    }
+
+    return {
+        ...automaton,
+        finalStates: newInitialStates
     }
 }
 
