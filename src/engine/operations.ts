@@ -269,6 +269,51 @@ export function rmTransition(
     }
 }
 
+export function upTransitionSymbols(automaton : Automaton, sourceId: StateId, targetId: StateId, symbols: Set<Symbol>): Automaton {
+    const newStates = new Map(automaton.states);
+    const state = newStates.get(sourceId);
+    const remainingSymbols = new Set(symbols);
+
+    if (!state) return automaton;
+
+    const newTransitions = new Map(state.transitions)
+
+    for (const [symbol, targets] of newTransitions) {
+        const newTargets = new Set(targets)
+        if (symbols.has(symbol)) {
+            newTargets.add(targetId);
+            newTransitions.set(symbol, newTargets);
+            remainingSymbols.delete(symbol)
+        }
+        else {
+            newTargets.delete(targetId);
+            if (newTargets.size === 0) {
+                newTransitions.delete(symbol)
+            }
+            else {
+                newTransitions.set(symbol, newTargets);
+            }
+        }
+    }
+
+    if (remainingSymbols.size !== 0) {
+        for (const symbol of symbols) {
+            const newTargets = new Set<StateId>()
+            newTargets.add(targetId);
+            newTransitions.set(symbol, newTargets);
+        }
+    }
+
+    newStates.set(sourceId, {
+        ...state,
+        transitions: newTransitions
+    });
+
+    return {
+        ...automaton,
+        states: newStates
+    }
+}
 
 export function getStates(automaton : Automaton): [StateId, State][] {
     return Array.from(automaton.states);
