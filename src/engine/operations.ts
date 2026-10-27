@@ -269,7 +269,12 @@ export function rmTransition(
     }
 }
 
-export function upTransitionSymbols(automaton : Automaton, sourceId: StateId, targetId: StateId, symbols: Set<Symbol>): Automaton {
+export function upTransitionSymbols(
+    automaton : Automaton,
+    sourceId: StateId,
+    targetId: StateId,
+    symbols: Set<Symbol>
+): Automaton {
     const newStates = new Map(automaton.states);
     const state = newStates.get(sourceId);
     const remainingSymbols = new Set(symbols);
@@ -343,4 +348,19 @@ export function getPosition(automaton : Automaton, stateId : StateId): Position 
 
 export function getLastState(automaton : Automaton) {
     return automaton.nextId - 1;
+}
+
+export function getSymbols(automaton : Automaton, sourceId : StateId, targetId: StateId) : Set<Symbol> {
+    const symbols = new Set<Symbol>();
+    const state = automaton.states.get(sourceId);
+
+    if (!state) return symbols;
+
+    for (const [symbol, targets] of state.transitions) {
+        if (targets.has(targetId)) {
+            symbols.add(symbol);
+        }
+    }
+
+    return symbols;
 }
