@@ -302,7 +302,7 @@ export function upTransitionSymbols(
     }
 
     if (remainingSymbols.size !== 0) {
-        for (const symbol of symbols) {
+        for (const symbol of remainingSymbols) {
             const newTargets = new Set<StateId>()
             newTargets.add(targetId);
             newTransitions.set(symbol, newTargets);
@@ -341,6 +341,28 @@ export function getTransitions(automaton : Automaton): Transition[] {
     return transitions;
 }
 
+export function getCombinedTransitions(automaton : Automaton): Transition[] {
+    const combined = new Map<string, Transition>
+
+    for (const transition of getTransitions(automaton)) {
+        const key = JSON.stringify([
+            transition.source,
+            transition.target       
+        ]);
+
+        const existing = combined.get(key)
+
+        if (existing) {
+            existing.symbol += `, transition.symbol`;
+        }
+        else {
+            combined.set(key, {
+                ...transition
+            });
+        }
+    }
+    return Array.from(combined.values());
+}
 
 export function getPosition(automaton : Automaton, stateId : StateId): Position {
     return automaton.statePositions.get(stateId)!
