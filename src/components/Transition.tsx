@@ -4,12 +4,14 @@ type Props = {
   sourcePosition?: Position;
   symbol?: string;
   targetPosition : Position;
+  onUpdateSymbols : Function;
 };
 
 export default function Transition({
   sourcePosition,
   symbol = "",
   targetPosition,
+  onUpdateSymbols
 }: Props) {
   if (!sourcePosition) {
     return (
@@ -125,9 +127,18 @@ export default function Transition({
         strokeWidth="2"
         markerEnd="url(#arrow)"
       />
-      <text x={midPosition.x} y={midPosition.y}>
-        {symbol}
-      </text>
+      <foreignObject
+        x={midPosition.x - 40}
+        y={midPosition.y - 15}
+        width={80}
+        height={30}
+      >
+        <input
+          type="text"
+          onChange={(e) => onUpdateSymbols(e.target.value)}
+          defaultValue={symbol}
+        />
+      </foreignObject>
     </>
   );
 }
