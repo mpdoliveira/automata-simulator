@@ -10,6 +10,7 @@ import {
   getLastState,
   makeFinal,
   makeInitial,
+  upTransitionSymbols,
 } from "./engine/operations";
 import type { Position, StateId, Transition, Symbol } from "./types";
 
@@ -82,6 +83,14 @@ export default function App() {
     setAutomaton(makeInitial(automaton, 0));
   }
 
+  function handleUpdateSymbols(
+    sourceId: StateId,
+    targetId: StateId,
+    symbols: Set<Symbol>,
+  ) {
+    setAutomaton(upTransitionSymbols(automaton, sourceId, targetId, symbols));
+  }
+
   return (
     <>
       <Button name="+ State" onClick={handleAddState} />
@@ -95,6 +104,7 @@ export default function App() {
         onAddTransition={handleAddTransition}
         onQuickAdd={handleQuickAdd}
         onMakeFinal={handleMakeFinal}
+        onUpdateSymbols={handleUpdateSymbols}
       />
     </>
   );
