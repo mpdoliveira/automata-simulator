@@ -277,13 +277,13 @@ export function upTransitionSymbols(
 ): Automaton {
     const newStates = new Map(automaton.states);
     const state = newStates.get(sourceId);
-    const remainingSymbols = new Set(symbols);
 
     if (!state) return automaton;
 
     if (symbols.size === 0) {
         symbols.add("");
     }
+    const remainingSymbols = new Set(symbols);
 
     const newTransitions = new Map(state.transitions)
 
