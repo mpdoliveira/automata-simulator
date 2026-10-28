@@ -1,5 +1,6 @@
-import { useEffect, useState, useRef } from "react";
+import { useState, useRef } from "react";
 
+// Engine functions
 import {
   initAutomaton,
   addState,
@@ -11,32 +12,26 @@ import {
   makeFinal,
   makeInitial,
   upTransitionSymbols,
-  getCombinedTransitions,
 } from "./engine/operations";
-import type { Position, StateId, Transition, Symbol } from "./types";
+import { runWord } from "./engine/execution.ts";
 
+// Components
 import Button from "./components/Button.tsx";
 import Canvas from "./components/canvas.tsx";
-import { runWord } from "./engine/execution.ts";
+
+// Types
+import type { Position, StateId, Transition, Symbol } from "./types";
 
 export default function App() {
   const [automaton, setAutomaton] = useState(initAutomaton());
 
-  useEffect(() => {
-      console.table(getCombinedTransitions(automaton)),
-      [automaton]
-    })
+  // Canvas manipulation
 
   const [selectedStates, setSelectedStates] = useState(new Set<StateId>());
+  
   const [selectedTransitions, setSelectedTransitions] = useState(
     new Set<Transition>(),
   );
-
-  const wordRef = useRef<string>("");
-
-  function handleAddState() {
-    setAutomaton(addState(automaton));
-  }
 
   function handleSelectState(id: StateId) {
     let newSelectedStates = new Set(selectedStates);
@@ -67,9 +62,25 @@ export default function App() {
     setSelectedTransitions(new Set<Transition>());
   }
 
+  // State manipulation
+
+  function handleMakeFinal(stateId: StateId) {
+    setAutomaton(makeFinal(automaton, stateId));
+  }
+
+  function handleMakeInitial() {
+    setAutomaton(makeInitial(automaton, 0));
+  }
+
   function handleMoveState(id: StateId, position: Position) {
     setAutomaton(mvState(automaton, id, position));
   }
+
+  function handleAddState() {
+    setAutomaton(addState(automaton));
+  }
+
+  // Transition manipulation
 
   function handleAddTransition(sourceId: StateId, targetId: StateId) {
     setAutomaton(addTransition(automaton, sourceId, "", targetId));
@@ -84,22 +95,13 @@ export default function App() {
     }
   }
 
-  function handleMakeFinal(stateId: StateId) {
-    setAutomaton(makeFinal(automaton, stateId));
-  }
-
-  function handleMakeInitial() {
-    setAutomaton(makeInitial(automaton, 0));
-  }
-
   function handleUpdateSymbols(
     sourceId: StateId,
     targetId: StateId,
     symbols: Symbol,
   ) {
-    console.log("updating tarnsition");
-    setAutomaton(
-      (previous) => upTransitionSymbols(
+    setAutomaton((previous) =>
+      upTransitionSymbols(
         previous,
         sourceId,
         targetId,
@@ -113,6 +115,10 @@ export default function App() {
     );
   }
 
+  // Run word
+
+  const wordRef = useRef<string>("");
+
   function handleRunWord() {
     console.log(wordRef.current);
     console.log(automaton.finalStates);
@@ -124,11 +130,14 @@ export default function App() {
 
   return (
     <>
-      <input onChange={(e) => {wordRef.current = e.target.value}} />
-      <Button name="Run" onClick={handleRunWord}/>
+      <input
+        onChange={(e) => {
+          wordRef.current = e.target.value;
+        }}
+      />
+      <Button name="Run" onClick={handleRunWord} />
       <Button name="+ State" onClick={handleAddState} />
       <Button name="+ Initial" onClick={handleMakeInitial} />
-      <Button name="make init" onClick={() => setAutomaton(makeInitial(automaton, 0))} />
       <Canvas
         automaton={automaton}
         selectedStates={selectedStates}
