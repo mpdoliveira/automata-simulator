@@ -4,15 +4,17 @@ type Props = {
   sourcePosition?: Position;
   symbol?: string;
   targetPosition : Position;
-  onUpdateSymbols : Function;
+  onUpdateSymbols? : Function;
 };
 
 export default function Transition({
   sourcePosition,
-  symbol = "",
+  symbol,
   targetPosition,
   onUpdateSymbols
 }: Props) {
+
+  // Initial state arrow
   if (!sourcePosition) {
     return (
       <>
@@ -41,6 +43,9 @@ export default function Transition({
     symbol="ε";
   }
 
+  if (!onUpdateSymbols) return;
+
+  // Loop arrow
   if (
     sourcePosition.x === targetPosition.x &&
     sourcePosition.y === targetPosition.y
@@ -90,14 +95,17 @@ export default function Transition({
         >
           <input
             type="text"
-            onChange={(e) => onUpdateSymbols(e.target.value)}
             defaultValue={symbol}
+            placeholder="ε"
+            onChange={(e) => onUpdateSymbols(e.target.value)}
+            
           />
         </foreignObject>
       </>
     )
   }
 
+  // Traditional State -> State arrow
   const deltaX = targetPosition.x - sourcePosition.x;
   const deltaY = targetPosition.y - sourcePosition.y;
 
