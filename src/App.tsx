@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import {
   initAutomaton,
@@ -11,19 +11,28 @@ import {
   makeFinal,
   makeInitial,
   upTransitionSymbols,
+  getCombinedTransitions,
 } from "./engine/operations";
 import type { Position, StateId, Transition, Symbol } from "./types";
 
 import Button from "./components/Button.tsx";
 import Canvas from "./components/canvas.tsx";
+import { runWord } from "./engine/execution.ts";
 
 export default function App() {
   const [automaton, setAutomaton] = useState(initAutomaton());
+
+  useEffect(() => {
+      console.table(getCombinedTransitions(automaton)),
+      [automaton]
+    })
 
   const [selectedStates, setSelectedStates] = useState(new Set<StateId>());
   const [selectedTransitions, setSelectedTransitions] = useState(
     new Set<Transition>(),
   );
+
+  const wordRef = useRef<string>("");
 
   function handleAddState() {
     setAutomaton(addState(automaton));
@@ -63,14 +72,14 @@ export default function App() {
   }
 
   function handleAddTransition(sourceId: StateId, targetId: StateId) {
-    setAutomaton(addTransition(automaton, sourceId, "a", targetId));
+    setAutomaton(addTransition(automaton, sourceId, "", targetId));
   }
 
   function handleQuickAdd(sourceId: StateId) {
     {
       setAutomaton(addState(automaton));
       setAutomaton((previous) =>
-        addTransition(previous, sourceId, "a", getLastState(previous)),
+        addTransition(previous, sourceId, "", getLastState(previous)),
       );
     }
   }
@@ -86,13 +95,33 @@ export default function App() {
   function handleUpdateSymbols(
     sourceId: StateId,
     targetId: StateId,
-    symbols: Set<Symbol>,
+    symbols: Symbol,
   ) {
-    setAutomaton(upTransitionSymbols(automaton, sourceId, targetId, symbols));
+    console.log("updating tarnsition");
+    setAutomaton(
+      (previous) => upTransitionSymbols(
+        automaton,
+        sourceId,
+        targetId,
+        new Set(
+          symbols
+            .split(",")
+            .map((symbol) => symbol.trim())
+            .filter(Boolean),
+        ),
+      ),
+    );
+  }
+
+  function handleRunWord() {
+    const runResult = runWord(automaton, wordRef.current);
+    console.log(runResult.accepted);
   }
 
   return (
     <>
+      <input onChange={(e) => {wordRef.current = e.target.value}} />
+      <Button name="Run" onClick={handleRunWord}/>
       <Button name="+ State" onClick={handleAddState} />
       <Button name="+ Initial" onClick={handleMakeInitial} />
       <Canvas

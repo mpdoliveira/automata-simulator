@@ -6,8 +6,8 @@ import State from "./State.tsx";
 import Transition from "./Transition.tsx";
 import {
   getPosition,
-  getTransitions,
-  getStates
+  getCombinedTransitions,
+  getStates,
 } from "../engine/operations.ts";
 
 type Props = {
@@ -19,6 +19,7 @@ type Props = {
   onAddTransition: Function;
   onQuickAdd: Function;
   onMakeFinal: Function;
+  onUpdateSymbols: Function;
 };
 
 export default function Canvas({
@@ -30,7 +31,9 @@ export default function Canvas({
   onAddTransition,
   onQuickAdd,
   onMakeFinal,
+  onUpdateSymbols,
 }: Props) {
+
   function handleKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
     if (e.key === "Delete") {
       onDelete();
@@ -50,11 +53,18 @@ export default function Canvas({
   return (
     <div tabIndex={0} onKeyDown={handleKeyDown}>
       <svg width="100%" height="70%">
-        {getTransitions(automaton).map((transition) => (
+        {getCombinedTransitions(automaton).map((transition) => (
           <Transition
             sourcePosition={getPosition(automaton, transition.source)}
             symbol={transition.symbol}
             targetPosition={getPosition(automaton, transition.target)}
+            onUpdateSymbols={(symbols : string) =>
+              onUpdateSymbols(
+                transition.source,
+                transition.target,
+                symbols,
+              )
+            }
           />
         ))}
         {getStates(automaton).map(([stateId, state]) => (
