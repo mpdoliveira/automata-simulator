@@ -281,6 +281,10 @@ export function upTransitionSymbols(
 
     if (!state) return automaton;
 
+    if (symbols.size === 0) {
+        symbols.add("");
+    }
+    
     const newTransitions = new Map(state.transitions)
 
     for (const [symbol, targets] of newTransitions) {
@@ -353,7 +357,7 @@ export function getCombinedTransitions(automaton : Automaton): Transition[] {
         const existing = combined.get(key)
 
         if (existing) {
-            existing.symbol += `, transition.symbol`;
+            existing.symbol += `, ${transition.symbol}`;
         }
         else {
             combined.set(key, {
