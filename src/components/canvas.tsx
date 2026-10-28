@@ -1,6 +1,6 @@
 import { useRef } from "react";
 
-import type { Automaton, Position, StateId, Symbol } from "../types.tsx";
+import type { Automaton, StateId } from "../types.tsx";
 
 import State from "./State.tsx";
 import Transition from "./Transition.tsx";
@@ -65,6 +65,11 @@ export default function Canvas({
                 symbols,
               )
             }
+          />
+        ))}
+        {Array.from(automaton.initialStates).map((stateId) => (
+          <Transition
+            targetPosition={getPosition(automaton, stateId)}
           />
         ))}
         {getStates(automaton).map(([stateId, state]) => (
