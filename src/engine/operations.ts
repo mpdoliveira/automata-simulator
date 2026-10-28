@@ -62,7 +62,7 @@ export function makeInitial(automaton: Automaton, stateId: StateId) : Automaton 
 
     return {
         ...automaton,
-        finalStates: newInitialStates
+        initialStates: newInitialStates
     }
 }
 
@@ -284,7 +284,7 @@ export function upTransitionSymbols(
     if (symbols.size === 0) {
         symbols.add("");
     }
-    
+
     const newTransitions = new Map(state.transitions)
 
     for (const [symbol, targets] of newTransitions) {
