@@ -37,6 +37,10 @@ export default function Transition({
     )
   }
 
+  if (symbol=="") {
+    symbol="ε";
+  }
+
   if (
     sourcePosition.x === targetPosition.x &&
     sourcePosition.y === targetPosition.y
