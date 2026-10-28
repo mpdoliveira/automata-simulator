@@ -82,6 +82,18 @@ export default function Transition({
           strokeWidth="2"
           markerEnd="url(#arrow)"
         />
+        <foreignObject
+          x={sourcePosition.x - 40}
+          y={sourcePosition.y - 80}
+          width={80}
+          height={30}
+        >
+          <input
+            type="text"
+            onChange={(e) => onUpdateSymbols(e.target.value)}
+            defaultValue={symbol}
+          />
+        </foreignObject>
       </>
     )
   }
@@ -139,8 +151,9 @@ export default function Transition({
       >
         <input
           type="text"
-          onChange={(e) => onUpdateSymbols(e.target.value)}
           defaultValue={symbol}
+          placeholder="ε"
+          onChange={(e) => onUpdateSymbols(e.target.value)}
         />
       </foreignObject>
     </>
