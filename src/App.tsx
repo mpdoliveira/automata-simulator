@@ -100,7 +100,7 @@ export default function App() {
     console.log("updating tarnsition");
     setAutomaton(
       (previous) => upTransitionSymbols(
-        automaton,
+        previous,
         sourceId,
         targetId,
         new Set(
@@ -114,8 +114,12 @@ export default function App() {
   }
 
   function handleRunWord() {
+    console.log(wordRef.current);
+    console.log(automaton.finalStates);
+    console.log(automaton.initialStates);
     const runResult = runWord(automaton, wordRef.current);
     console.log(runResult.accepted);
+    console.table(runResult.steps);
   }
 
   return (
@@ -124,6 +128,7 @@ export default function App() {
       <Button name="Run" onClick={handleRunWord}/>
       <Button name="+ State" onClick={handleAddState} />
       <Button name="+ Initial" onClick={handleMakeInitial} />
+      <Button name="make init" onClick={() => setAutomaton(makeInitial(automaton, 0))} />
       <Canvas
         automaton={automaton}
         selectedStates={selectedStates}
