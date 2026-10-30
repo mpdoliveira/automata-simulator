@@ -8,6 +8,8 @@ import type {
 } from "../types.ts";
 
 
+// Automata handling
+
 export function initAutomaton (
     name : string = "Default",
     alphanet?: Set<Symbol>,
@@ -34,6 +36,8 @@ export function initAutomaton (
         finalStates: finalStates
     }
 }
+
+// State handling
 
 export function makeFinal(automaton: Automaton, stateId: StateId) : Automaton {
     const newFinalStates = new Set(automaton.finalStates);
@@ -175,6 +179,7 @@ export function mvState(
     }
 }
 
+// Transition handling
 
 export function addTransition(
     automaton : Automaton,
@@ -324,10 +329,12 @@ export function upTransitionSymbols(
     }
 }
 
+// Get data helper function
+// Some are meant to improve readability and keep the code stylistically consistent
+
 export function getStates(automaton : Automaton): [StateId, State][] {
     return Array.from(automaton.states);
 }
-
 
 export function getTransitions(automaton : Automaton): Transition[] {
     const transitions:Transition[] = []
